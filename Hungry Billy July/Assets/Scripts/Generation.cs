@@ -7,77 +7,77 @@ using TMPro;
 public class Generation : MonoBehaviour
 {
 
-    public List<GenerationParent> availableGenerationTemplates;
-    public TMP_Dropdown templateDropdown;
+    public List<GenerationParent> availableGenerationTemplates;     // different generation classes/functions
+    public TMP_Dropdown templateDropdown;                           // UI to choose different generation
 
-    public List<GenerationBiome> availableBiomes;
+    public List<GenerationBiome> availableBiomes;                   // biomes to choose from
     public TMP_Dropdown biomeDropdown;
 
-    public GameObject water;
+    public GameObject water;                                        // water prefab + pool
     public ObjectPool waterPool;
 
-    public GameObject road;
+    public GameObject road;                                         // road prefab + pool
     public ObjectPool roadPool;
 
-    int generationTemplateIndex = -1;
+    int generationTemplateIndex = -1;                               // player choice updated through UI
     int generationBiomeIndex = -1;
 
-    ObjectPool targetTerrainPool;
-    public GameObject startGame;
+    ObjectPool targetTerrainPool;                                   // recently selected biome
+    public GameObject startGame;                                    // ui 
     public GameObject generationPanel;
 
     public GameObject startGameButton;
 
 
     void Awake()
-    {                     // initialise generation template
-        List<string> generationTemplateNames = new List<string>();
-        for(int i = 0; i < availableGenerationTemplates.Count; i++)
+    {                       
+        List<string> generationTemplateNames = new List<string>();      // ui list
+        for(int i = 0; i < availableGenerationTemplates.Count; i++)         // iterate through generation classes
         {
-            GenerationParent targetGenerationTemplate = availableGenerationTemplates[i];
+            GenerationParent targetGenerationTemplate = availableGenerationTemplates[i];    // initialise generation classes
             targetGenerationTemplate.Initialise(waterPool);
             generationTemplateNames.Add(targetGenerationTemplate.generationTemplateName);
         }
 
-        templateDropdown.AddOptions(generationTemplateNames);
+        templateDropdown.AddOptions(generationTemplateNames);           // update ui
 
-        List<string> biomeTemplateNames = new List<string>();
+        List<string> biomeTemplateNames = new List<string>();           // ui list    
         for(int i = 0; i < availableBiomes.Count; i++)
         {
             GenerationBiome targetBiome = availableBiomes[i];
             biomeTemplateNames.Add(targetBiome.biomeName);
 
-            targetBiome.targetObjectPool.InitialisePool(targetBiome.primaryTerrain);
+            targetBiome.targetObjectPool.InitialisePool(targetBiome.primaryTerrain);    
         }
 
-        biomeDropdown.AddOptions(biomeTemplateNames);
+        biomeDropdown.AddOptions(biomeTemplateNames);           // update ui
 
-        waterPool.InitialisePool(water);
+        waterPool.InitialisePool(water);                    // initialise pool
         roadPool.InitialisePool(road);
 
         UIChanged();
     }
 
 
-    public void UIChanged()
+    public void UIChanged()                     // activated by dropdowns
     {
         generationTemplateIndex = templateDropdown.value;
         generationBiomeIndex = biomeDropdown.value;
     }
 
-    public void GenerateMap()
+    public void GenerateMap()               // map generation code
     {
-        if (targetTerrainPool != null)
+        if (targetTerrainPool != null)          // reset object pools
         {
             targetTerrainPool.ResetPool();
             waterPool.ResetPool();
             roadPool.ResetPool();
         }
 
-        targetTerrainPool = availableBiomes[generationBiomeIndex].targetObjectPool;
-        GenerationParent targetGenerationTemplate = availableGenerationTemplates[generationTemplateIndex];
+        targetTerrainPool = availableBiomes[generationBiomeIndex].targetObjectPool;     // selected the biome class
+        GenerationParent targetGenerationTemplate = availableGenerationTemplates[generationTemplateIndex];      // select the generation class
 
-        targetGenerationTemplate.GenerateMap(targetTerrainPool, roadPool);
+        targetGenerationTemplate.GenerateMap(targetTerrainPool, roadPool);      // execute generation
       //  startGame.SetActive(true);
 
         startGameButton.SetActive(true);
