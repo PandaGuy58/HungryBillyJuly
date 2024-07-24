@@ -5,8 +5,10 @@ using UnityEngine;
 public abstract class GenerationParent : MonoBehaviour
 {
     [HideInInspector] public string generationTemplateName;
-    [HideInInspector] ObjectPool waterPool;
-    public virtual void GenerateMap(ObjectPool primaryTerrainPool)
+    [HideInInspector] public ObjectPool waterPool;
+
+    [HideInInspector] public int size = 10;
+    public virtual void GenerateMap(ObjectPool primaryTerrainPool, ObjectPool roadPool)
     {
 
     }
